@@ -1,6 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect } from "react";
+
+import { getLocalStorage } from "@/helpers/functions/localStorage";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const getToken = getLocalStorage("token");
+
+  const router = useRouter();
+  useEffect(() => {
+    if (getToken !== undefined && getToken !== null) {
+      router.push("/");
+    }
+  }, []);
   return (
     <div className="h-[100vh] flex justify-center items-center">
       <div className="w-[30%] p-4 border flex flex-col justify-center space-y-2 rounded-lg">

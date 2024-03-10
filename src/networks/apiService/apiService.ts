@@ -1,10 +1,8 @@
 const getConfig = (configService: any, params?: any) => {
     const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(configService.body)
+        method: configService.method,
+        headers: configService.headers,
+        body: configService.body
     }
 
     return config;
@@ -23,17 +21,16 @@ const fetchError = (error: any, configService?: any) => {
 
 const apiService = async (type: string, url: string, params: any, configService: any) => {
     const config = getConfig(configService, params);
-    const baseUrl = url ? `https://fakestoreapi.com/products${url}` : 'https://fakestoreapi.com/products'
+
+
+    const baseUrl = url ? `http://localhost:1323${url}` : 'http://localhost:1323'
+    // const baseUrl = url ? `${process.env.COURTFIELD_API_URL}${url}` : `${process.env.COURTFIELD_API_URL}`
     switch (type) {
         case 'get':
             return fetch(baseUrl, config)
                 .then(res => fetchSuccess(res))
                 .catch(err => fetchError(err))
         case 'post':
-            return fetch(baseUrl, config)
-                .then(res => fetchSuccess(res))
-                .catch(err => fetchError(err))
-        case 'get':
             return fetch(baseUrl, config)
                 .then(res => fetchSuccess(res))
                 .catch(err => fetchError(err))

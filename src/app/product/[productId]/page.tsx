@@ -1,9 +1,11 @@
 "use client";
 import dayjs from "dayjs";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 type Props = {};
 
 type TimeSlot = {
@@ -12,6 +14,8 @@ type TimeSlot = {
 };
 
 export default function ProductId({}: Props) {
+  const router = useRouter();
+
   const [date, setDate] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [timeSlotsData, setTimeSlotsData] = useState<TimeSlot[]>([]);
@@ -48,16 +52,26 @@ export default function ProductId({}: Props) {
       });
     }
 
-    console.log(timeSlots);
+    // console.log(timeSlots);
     return timeSlots;
   };
+
+  const handlePayment = () => {
+    if (!selectedTimeSlot) {
+      toast.error("กรุณาเลือกเวลาที่ต้องการจอง");
+      return;
+    }
+    router.push(`/payment/test`);
+  };
+
   useEffect(() => {
     setTimeSlotsData(generateTimeSlots());
   }, [date]);
 
   return (
     <div className="container mx-auto">
-      <label>Date:</label>
+      <ToastContainer />
+      <label>วันที่จอง:</label>
       <input
         type="text"
         value={date.toLocaleDateString()}
@@ -93,7 +107,7 @@ export default function ProductId({}: Props) {
                 : "bg-white"
             }`}
           >
-            <h2 className="text-xl font-bold pt-4 ">
+            <h2 className="text-xl font-bold p-2 ">
               {item.startTime.toLocaleTimeString()} -{" "}
               {item.endTime.toLocaleTimeString()}
             </h2>
@@ -102,12 +116,12 @@ export default function ProductId({}: Props) {
       </div>
 
       <div className="flex justify-end">
-        <Link
-          href={"/payment"}
-          className="bg-green-500 text-white py-2 px-4 rounded-md mt-4"
+        <div
+          onClick={handlePayment}
+          className="cursor-pointer bg-green-500 text-white py-2 px-4 rounded-md mt-4 transition-all hover:scale-105"
         >
           Payment
-        </Link>
+        </div>
       </div>
     </div>
   );

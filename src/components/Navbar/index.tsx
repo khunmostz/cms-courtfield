@@ -1,6 +1,7 @@
+import { getLocalStorage } from "@/helpers/functions/localStorage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiMenu5Fill } from "react-icons/ri";
 
 type Props = {};
@@ -14,7 +15,10 @@ export default function Navbar({}: Props) {
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  const sceens: ScreenProps[] = [
+  const getToken = getLocalStorage("token");
+
+  // useState Screen
+  const [screens, setScreens] = useState<ScreenProps[]>([
     {
       name: "Home",
       path: "/",
@@ -35,7 +39,13 @@ export default function Navbar({}: Props) {
       name: "Register Now",
       path: "/register",
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    if (getToken !== undefined && getToken !== null) {
+      setScreens((prev) => prev.filter((item) => item.name !== "Register Now"));
+    }
+  }, [getToken]);
 
   return (
     <nav className="container mx-auto grid md:grid-cols-2 items-center text-sm pt-2 sticky top-0 bg-white">
@@ -66,7 +76,7 @@ export default function Navbar({}: Props) {
             : "opacity-100 top-[-250px]"
         }`}
       >
-        {sceens.map((item: ScreenProps, index: number) =>
+        {screens.map((item: ScreenProps, index: number) =>
           item.name === "Register Now" ? (
             <li
               key={index}

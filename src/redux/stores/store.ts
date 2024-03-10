@@ -1,10 +1,12 @@
 
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from '../stores/slices/couterSlice'
+import loadingReducer from '../stores/slices/loadingSlice'
 export const makeStore = () => {
     return configureStore({
         reducer: {
             counter: counterReducer,
+            loading: loadingReducer
         }
     })
 }
